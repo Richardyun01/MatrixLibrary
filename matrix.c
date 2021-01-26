@@ -132,11 +132,17 @@ int matAdd(MATRIX *A, MATRIX *B, MATRIX *C)
     if (A->rows != B->rows || A->cols != B->cols) return -1;
 
     matAlloc(C, A->rows, A->cols);
+ #if 0
     for (int i = 0; i < C->rows; i++) {
         for (int j = 0; j < C->cols; j++) {
             C->data2d[i][j] = A->data2d[i][j] + B->data2d[i][j];
         }
     }
+#else
+    for (int i = 0; i < C->rows*C->cols; i++) {
+        C->data1d[i] = A->data1d[i] + B->data1d[i];
+    }
+#endif
 
     return 0;
 }
@@ -146,11 +152,17 @@ int matSub(MATRIX *A, MATRIX *B, MATRIX *C)
     if (A->rows != B->rows || A->cols != B->cols) return -1;
 
     matAlloc(C, A->rows, A->cols);
+#if 0
     for (int i = 0; i < C->rows; i++) {
         for (int j = 0; j < C->cols; j++) {
             C->data2d[i][j] = A->data2d[i][j] - B->data2d[i][j];
         }
     }
+#else
+    for (int i = 0; i < C->rows*C->cols; i++) {
+        C->data1d[i] = A->data1d[i] - B->data1d[i];
+    }
+#endif
 
     return 0;
 }
