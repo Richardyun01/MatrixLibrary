@@ -35,9 +35,6 @@ int main()
         }
     }
 
-    matSave("A.txt", &A);
-    matLoad("A.txt", &A);
-
     printf("B row: ");
     scanf("%d", &r);
     printf("B col: ");
@@ -53,24 +50,31 @@ int main()
 
     printf("\n");
 
+    int op;
+
+    printf("1+, 2-, 3*: ");
+    scanf("%d", &op);
+
+    switch (op) {
+    case 1:
+        matAdd(&A, &B, &C);
+        matPrint(&C);
+        break;
+    case 2:
+        matSub(&A, &B, &C);
+        matPrint(&C);
+        break;
+    case 3:
+        matMul(&A, &B, &C);
+        matPrint(&C);
+        break;
+    }
+
+    matSave("A.txt", &A);
+    matLoad("A.txt", &A);
     matSave("B.txt", &B);
     matLoad("B.txt", &B);
 
-    int count;
-
-    printf("1+, 2-, 3*: ");
-    scanf("%d", &count);
-
-    if (count == 1) {
-        matAdd(&A, &B, &C);
-        matPrint(&C);
-    } else if (count == 2) {
-        matSub(&A, &B, &C);
-        matPrint(&C);
-    } else if (count == 3) {
-        matMul(&A, &B, &C);
-        matPrint(&C);
-    }
 
     return 0;
 }
