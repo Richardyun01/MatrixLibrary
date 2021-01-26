@@ -3,8 +3,8 @@
 
 typedef struct {
     int rows, cols;
-    float **data;
-    float *raw;
+    float **data2d;
+    float *data1d;
 } MATRIX;
 
 void matAlloc(MATRIX *A, int rows, int cols);
@@ -31,7 +31,7 @@ int main()
 
     for (i = 0; i < r; i++) {
         for (j = 0; j < c; j++) {
-            scanf("%f", &A.data[i][j]);
+            scanf("%f", &A.data2d[i][j]);
         }
     }
 
@@ -44,7 +44,7 @@ int main()
 
     for (i = 0; i < r; i++) {
         for (j = 0; j < c; j++) {
-            scanf("%f", &B.data[i][j]);
+            scanf("%f", &B.data2d[i][j]);
         }
     }
 
@@ -83,10 +83,10 @@ void matAlloc(MATRIX *A, int rows, int cols)
 {
     A->rows = rows;
     A->cols = cols;
-    A->raw = (float*)realloc(A->raw, rows*cols*sizeof(float));
-    A->data = (float**)realloc(A->data, rows*sizeof(float*));
+    A->data1d = (float*)realloc(A->data1d, rows*cols*sizeof(float));
+    A->data2d = (float**)realloc(A->data2d, rows*sizeof(float*));
     for (int i = 0; i < rows; i++) {
-        A->data[i] = A->raw + i*cols;
+        A->data2d[i] = A->data1d + i*cols;
     }
 }
 
@@ -94,7 +94,7 @@ void matPrint(MATRIX *A)
 {
     for (int i = 0; i < A->rows; i++) {
         for (int j = 0; j < A->cols; j++) {
-            printf("%f ", A->data[i][j]);
+            printf("%f ", A->data2d[i][j]);
         }
         printf("\n");
     }
@@ -107,7 +107,7 @@ int matSave(char *path, MATRIX *A)
 
     fwrite(&(A->rows), sizeof(int), 1, fp);
     fwrite(&(A->cols), sizeof(int), 1, fp);
-    fwrite(A->raw, sizeof(float), A->rows*A->cols, fp);
+    fwrite(A->data1d, sizeof(float), A->rows*A->cols, fp);
     fclose(fp);
     return 0;
 }
@@ -122,7 +122,7 @@ int matLoad(char *path, MATRIX *A)
     fread(&cols, sizeof(int), 1, fp);
 
     matAlloc(A, rows, cols);
-    fread(A->raw, sizeof(float), rows*cols, fp);
+    fread(A->data1d, sizeof(float), rows*cols, fp);
     fclose(fp);
     return 0;
 }
@@ -134,7 +134,7 @@ int matAdd(MATRIX *A, MATRIX *B, MATRIX *C)
     matAlloc(C, A->rows, A->cols);
     for (int i = 0; i < C->rows; i++) {
         for (int j = 0; j < C->cols; j++) {
-            C->data[i][j] = A->data[i][j] + B->data[i][j];
+            C->data2d[i][j] = A->data2d[i][j] + B->data2d[i][j];
         }
     }
 
@@ -148,7 +148,7 @@ int matSub(MATRIX *A, MATRIX *B, MATRIX *C)
     matAlloc(C, A->rows, A->cols);
     for (int i = 0; i < C->rows; i++) {
         for (int j = 0; j < C->cols; j++) {
-            C->data[i][j] = A->data[i][j] - B->data[i][j];
+            C->data2d[i][j] = A->data2d[i][j] - B->data2d[i][j];
         }
     }
 
@@ -164,9 +164,9 @@ int matMul(MATRIX *A, MATRIX *B, MATRIX *C)
         for (int j = 0; j < C->rows; j++) {
             float sum = 0;
             for (int k = 0; k < A->cols; A++) {
-                sum += A->data[i][k] * B->data[k][j];
+                sum += A->data2d[i][k] * B->data2d[k][j];
             }
-            C->data[i][j] = sum;
+            C->data2d[i][j] = sum;
         }
     }
 
