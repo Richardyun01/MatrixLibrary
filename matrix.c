@@ -14,6 +14,8 @@ int matLoad(char *path, MATRIX *A);
 int matAdd(MATRIX *A, MATRIX *B, MATRIX *C);
 int matSub(MATRIX *A, MATRIX *B, MATRIX *C);
 int matMul(MATRIX *A, MATRIX *B, MATRIX *C);
+int matTrans(MATRIX *A, MATRIX *AT);
+//int matInverse(MATRIX *A, MATRIX *AI);
 
 int main()
 {
@@ -50,12 +52,13 @@ int main()
 
     printf("\n");
 
-    int op;
+    int op1;
+    int op2;
 
-    printf("1+, 2-, 3*: ");
-    scanf("%d", &op);
+    printf("1+, 2-, 3*, 4transpose, 5inverse: ");
+    scanf("%d", &op1);
 
-    switch (op) {
+    switch (op1) {
     case 1:
         matAdd(&A, &B, &C);
         matPrint(&C);
@@ -68,6 +71,30 @@ int main()
         matMul(&A, &B, &C);
         matPrint(&C);
         break;
+    case 4:
+        printf("1->A, 2->B: ");
+        scanf("%d", op2);
+        if (op2 == 1) {
+            matTrans(&A, &C);
+            matPrint(&C);
+            break;
+        } else if (op2 == 2) {
+            matTrans(&B, &C);
+            matPrint(&C);
+            break;
+        }
+    case 5:
+        printf("1->A, 2->B: ");
+        scanf("%d", op2);
+        if (op2 == 1) {
+            matInverse(&A, &C);
+            matPrint(&C);
+            break;
+        } else if (op2 == 2) {
+            matInverse(&B, &C);
+            matPrint(&C);
+            break;
+        }
     }
 
     matSave("A.txt", &A);
@@ -184,3 +211,29 @@ int matMul(MATRIX *A, MATRIX *B, MATRIX *C)
 
     return 0;
 }
+
+int matTrans(MATRIX *A, MATRIX *AT)
+{
+    matAlloc(AT, A->cols, A->rows);
+    for (int i = 0; i < AT->rows; i++) {
+        for (int j = 0; j < AT->cols; j++) {
+            AT->data2d[i][j] = A->data2d[j][i];
+        }
+    }
+
+    return 0;
+}
+
+/*int matInverse(MATRIX *A, MATRIX *AI)
+{
+    if (A->rows != A->cols) return -1;
+
+    int i, j, det;
+    matAlloc(AI, A->rows, A->cols);
+
+    for (int i = 0; i < A->rows; i++) {
+        for (int j = 0; j < A->rows; j++) {
+            det =
+        }
+    }
+}*/
