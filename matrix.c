@@ -224,16 +224,38 @@ int matTrans(MATRIX *A, MATRIX *AT)
     return 0;
 }
 
-/*int matInverse(MATRIX *A, MATRIX *AI)
+int matInverse(MATRIX *A, MATRIX *AI)
 {
     if (A->rows != A->cols) return -1;
 
-    int i, j, det;
+    int i, j, k, det, a;
     matAlloc(AI, A->rows, A->cols);
 
-    for (int i = 0; i < A->rows; i++) {
-        for (int j = 0; j < A->rows; j++) {
-            det =
+    int n = (A->rows);
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < 2 * n; j++) {
+            if (i == (j - n)) AI[i][j] = 1;
         }
     }
-}*/
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            if (i != j) {
+                det = AI[j][i] / AI[i][i];
+                for (k = 0; k < 2 * n; k++) {
+                    AI[j][k] -= det * AI[i][k];
+                }
+            }
+        }
+    }
+
+    for (i = 0; i < n; i++) {
+        a = AI[i][i];
+        for (j = 0; j < 2 * n; j++) {
+            AI[i][j] /= a;
+        }
+    }
+
+    return 0;
+}
